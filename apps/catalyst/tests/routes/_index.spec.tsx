@@ -1,5 +1,5 @@
-import { createRoutesStub } from 'react-router';
 import { render, screen, waitFor } from '@testing-library/react';
+import { createRoutesStub } from 'react-router';
 import App from '../../app/app';
 
 test('renders loader data', async () => {
