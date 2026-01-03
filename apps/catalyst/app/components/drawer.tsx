@@ -172,7 +172,12 @@ export function RoutedDrawer({
   return (
     <AnimatePresence onExitComplete={onClosed}>
       {open ? (
-        <Headless.Dialog open={open} onClose={setOpen}>
+        <Headless.Dialog
+          open={open}
+          onClose={() => {
+            // Disable closing the drawer by clicking outside or pressing Escape
+          }}
+        >
           {/* Backdrop */}
           <Headless.DialogBackdrop>
             <motion.div
@@ -191,11 +196,7 @@ export function RoutedDrawer({
           {/* Drawer panel */}
           <Headless.DialogPanel>
             <motion.div
-              className={clsx(
-                sizes[size],
-                // 'relative ml-auto h-full w-full max-w-80 p-2',
-                'fixed inset-y-0 right-0 z-50 w-full max-w-80 p-2'
-              )}
+              className={clsx(sizes[size], 'fixed inset-y-0 right-0 z-50 w-full max-w-80 p-2')}
               style={
                 {
                   '--close-button-height': `${closeButtonRef.current?.offsetHeight ?? 0}px`,

@@ -1,5 +1,5 @@
 import { EllipsisVerticalIcon, MagnifyingGlassIcon } from '@heroicons/react/16/solid';
-import { useLoaderData } from 'react-router';
+import { Outlet, useLoaderData } from 'react-router';
 import { Badge } from '../../components/badge';
 import { Button } from '../../components/button';
 import { Divider } from '../../components/divider';
@@ -28,7 +28,9 @@ export default function Events() {
   const { events } = useLoaderData<typeof loader>();
 
   return (
-    <>
+    <div
+    // style={{ viewTransitionName: 'events-page' }}
+    >
       <div className="flex flex-wrap items-end justify-between gap-4">
         <div className="max-sm:w-full sm:flex-1">
           <Heading>Events</Heading>
@@ -48,7 +50,7 @@ export default function Events() {
             </div>
           </div>
         </div>
-        <Button>Create event</Button>
+        <Button href="/events/new">Create event</Button>
       </div>
       <ul className="mt-10">
         {events.map((event, index) => (
@@ -83,8 +85,8 @@ export default function Events() {
                   </DropdownButton>
                   <DropdownMenu anchor="bottom end">
                     <DropdownItem href={event.url}>View</DropdownItem>
-                    <DropdownItem>Edit</DropdownItem>
-                    <DropdownItem>Delete</DropdownItem>
+                    <DropdownItem href={`/events/${event.id}/edit`}>Edit</DropdownItem>
+                    <DropdownItem href={`/events/${event.id}/delete`}>Delete</DropdownItem>
                   </DropdownMenu>
                 </Dropdown>
               </div>
@@ -92,6 +94,7 @@ export default function Events() {
           </li>
         ))}
       </ul>
-    </>
+      <Outlet />
+    </div>
   );
 }

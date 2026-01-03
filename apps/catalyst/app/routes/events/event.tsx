@@ -1,5 +1,6 @@
 import { ChevronLeftIcon } from '@heroicons/react/16/solid';
-import { LoaderFunctionArgs, MetaArgs, useLoaderData } from 'react-router';
+import type { ShouldRevalidateFunctionArgs } from 'react-router';
+import { LoaderFunctionArgs, MetaArgs, Outlet, useLoaderData } from 'react-router';
 import { Badge } from '../../components/badge';
 import { Button } from '../../components/button';
 import { Heading, Subheading } from '../../components/heading';
@@ -32,11 +33,21 @@ export async function loader({ params }: LoaderFunctionArgs) {
   return { event, orders };
 }
 
+export function shouldRevalidate({ actionResult }: ShouldRevalidateFunctionArgs) {
+  // Don't revalidate after child delete action - the event no longer exists
+  if ((actionResult as { deleted?: boolean })?.deleted) {
+    return false;
+  }
+  return true;
+}
+
 export default function Event() {
   const { event, orders } = useLoaderData<typeof loader>();
 
   return (
-    <>
+    <div
+    // style={{ viewTransitionName: 'event-detail-page' }}
+    >
       <div className="max-lg:hidden">
         <Link href="/events" className="inline-flex items-center gap-2 text-sm/6 text-zinc-500 dark:text-zinc-400">
           <ChevronLeftIcon className="size-4 fill-zinc-400 dark:fill-zinc-500" />
@@ -59,8 +70,12 @@ export default function Event() {
           </div>
         </div>
         <div className="flex gap-4">
-          <Button outline>Edit</Button>
-          <Button>View</Button>
+          <Button outline href={`/events/${event.id}/edit`}>
+            Edit
+          </Button>
+          <Button color="red" href={`/events/${event.id}/delete`}>
+            Delete
+          </Button>
         </div>
       </div>
       <div className="mt-8 grid gap-8 sm:grid-cols-3">
@@ -93,6 +108,7 @@ export default function Event() {
           ))}
         </TableBody>
       </Table>
-    </>
+      <Outlet />
+    </div>
   );
 }

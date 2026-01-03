@@ -1,3 +1,5 @@
+'use client';
+
 import * as Headless from '@headlessui/react';
 import clsx from 'clsx';
 import { AnimatePresence, motion } from 'motion/react';
@@ -94,16 +96,13 @@ interface RoutedDialogRenderProps {
 
 export function RoutedDialog({
   size = 'lg',
-  className,
   children,
   onClosed,
-  ...props
 }: {
   size?: keyof typeof sizes;
-  className?: string;
   children: React.ReactNode | ((api: RoutedDialogRenderProps) => React.ReactNode);
   onClosed: () => void;
-} & Omit<Headless.DialogProps, 'as' | 'className'>) {
+}) {
   const [open, setOpen] = useState(true);
   const close = useCallback(() => setOpen(false), []);
 
@@ -115,7 +114,12 @@ export function RoutedDialog({
   return (
     <AnimatePresence onExitComplete={onClosed}>
       {open ? (
-        <Headless.Dialog {...props} open={open}>
+        <Headless.Dialog
+          open={open}
+          onClose={() => {
+            // Disable closing the dialog by clicking outside or pressing Escape
+          }}
+        >
           <Headless.DialogBackdrop>
             <motion.div
               className="fixed inset-0 flex w-screen justify-center overflow-y-auto bg-zinc-950/25 px-2 py-2 focus:outline-0 sm:px-6 sm:py-8 lg:px-8 lg:py-16 dark:bg-zinc-950/50"
@@ -136,11 +140,22 @@ export function RoutedDialog({
               <Headless.DialogPanel>
                 <motion.div
                   className={clsx(
-                    className,
                     sizes[size],
-                    'row-start-2 w-full min-w-0 rounded-t-3xl bg-white p-(--gutter) shadow-lg ring-1 ring-zinc-950/10 [--gutter:--spacing(8)] sm:mb-auto sm:rounded-2xl dark:bg-zinc-900 dark:ring-white/10 forced-colors:outline',
-                    'transition duration-100 will-change-transform data-closed:translate-y-12 data-closed:opacity-0 data-enter:ease-out data-leave:ease-in sm:data-closed:translate-y-0 sm:data-closed:data-enter:scale-95'
+                    'row-start-2 w-full min-w-0 rounded-t-3xl bg-white p-(--gutter) shadow-lg ring-1 ring-zinc-950/10 [--gutter:--spacing(8)] sm:mb-auto sm:rounded-2xl dark:bg-zinc-900 dark:ring-white/10 forced-colors:outline'
                   )}
+                  initial={{ opacity: 0, y: 50, scale: 0.95 }}
+                  animate={{
+                    opacity: 1,
+                    y: 0,
+                    scale: 1,
+                    transition: { duration: 0.1, ease: [0, 0, 0.2, 1] }, // enter 100ms ease-out
+                  }}
+                  exit={{
+                    opacity: 0,
+                    y: 50,
+                    scale: 0.95,
+                    transition: { duration: 0.1, ease: [0.4, 0, 1, 1] }, // exit 100ms ease-in
+                  }}
                 >
                   {typeof children === 'function' ? children(renderProps) : children}
                 </motion.div>

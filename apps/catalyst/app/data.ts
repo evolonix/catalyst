@@ -713,89 +713,194 @@ export async function getOrders() {
   ];
 }
 
+export interface Event {
+  id: number;
+  name: string;
+  url: string;
+  date: string;
+  time: string;
+  location: string;
+  totalRevenue: string;
+  totalRevenueChange: string;
+  ticketsAvailable: number;
+  ticketsSold: number;
+  ticketsSoldChange: string;
+  pageViews: string;
+  pageViewsChange: string;
+  status: string;
+  imgUrl: string;
+  thumbUrl: string;
+}
+
+export interface CreateEventInput {
+  name: string;
+  date: string;
+  time: string;
+  location: string;
+  ticketsAvailable: number;
+  status: string;
+  imgUrl: string;
+  thumbUrl: string;
+}
+
+export type UpdateEventInput = CreateEventInput;
+
+const initialEvents: Event[] = [
+  {
+    id: 1000,
+    name: 'Bear Hug: Live in Concert',
+    url: '/events/1000',
+    date: 'May 20, 2024',
+    time: '10 PM',
+    location: 'Harmony Theater, Winnipeg, MB',
+    totalRevenue: '$102,552',
+    totalRevenueChange: '+3.2%',
+    ticketsAvailable: 500,
+    ticketsSold: 350,
+    ticketsSoldChange: '+8.1%',
+    pageViews: '24,300',
+    pageViewsChange: '-0.75%',
+    status: 'On Sale',
+    imgUrl: '/events/bear-hug.jpg',
+    thumbUrl: '/events/bear-hug-thumb.jpg',
+  },
+  {
+    id: 1001,
+    name: 'Six Fingers — DJ Set',
+    url: '/events/1001',
+    date: 'Jun 2, 2024',
+    time: '8 PM',
+    location: 'Moonbeam Arena, Uxbridge, ON',
+    totalRevenue: '$24,115',
+    totalRevenueChange: '+3.2%',
+    ticketsAvailable: 150,
+    ticketsSold: 72,
+    ticketsSoldChange: '+8.1%',
+    pageViews: '57,544',
+    pageViewsChange: '-2.5%',
+    status: 'On Sale',
+    imgUrl: '/events/six-fingers.jpg',
+    thumbUrl: '/events/six-fingers-thumb.jpg',
+  },
+  {
+    id: 1002,
+    name: 'We All Look The Same',
+    url: '/events/1002',
+    date: 'Aug 5, 2024',
+    time: '4 PM',
+    location: 'Electric Coliseum, New York, NY',
+    totalRevenue: '$40,598',
+    totalRevenueChange: '+3.2%',
+    ticketsAvailable: 275,
+    ticketsSold: 275,
+    ticketsSoldChange: '+8.1%',
+    pageViews: '122,122',
+    pageViewsChange: '-8.0%',
+    status: 'Closed',
+    imgUrl: '/events/we-all-look-the-same.jpg',
+    thumbUrl: '/events/we-all-look-the-same-thumb.jpg',
+  },
+  {
+    id: 1003,
+    name: 'Viking People',
+    url: '/events/1003',
+    date: 'Dec 31, 2024',
+    time: '8 PM',
+    location: 'Tapestry Hall, Cambridge, ON',
+    totalRevenue: '$3,552',
+    totalRevenueChange: '+3.2%',
+    ticketsAvailable: 40,
+    ticketsSold: 6,
+    ticketsSoldChange: '+8.1%',
+    pageViews: '9,000',
+    pageViewsChange: '-0.15%',
+    status: 'On Sale',
+    imgUrl: '/events/viking-people.jpg',
+    thumbUrl: '/events/viking-people-thumb.jpg',
+  },
+];
+
+let eventsStore: Event[] | null = null;
+
+async function getEventsStore(): Promise<Event[]> {
+  if (eventsStore === null) {
+    eventsStore = [...initialEvents];
+  }
+  return eventsStore;
+}
+
+export async function createEvent(input: CreateEventInput): Promise<Event> {
+  const events = await getEventsStore();
+
+  const maxId = events.reduce((max, e) => Math.max(max, e.id), 0);
+  const newId = maxId + 1;
+
+  const newEvent: Event = {
+    id: newId,
+    name: input.name,
+    url: `/events/${newId}`,
+    date: input.date,
+    time: input.time,
+    location: input.location,
+    totalRevenue: '$0',
+    totalRevenueChange: '+0.0%',
+    ticketsAvailable: input.ticketsAvailable,
+    ticketsSold: 0,
+    ticketsSoldChange: '+0.0%',
+    pageViews: '0',
+    pageViewsChange: '+0.0%',
+    status: input.status,
+    imgUrl: input.imgUrl || '/events/placeholder.jpg',
+    thumbUrl: input.thumbUrl || '/events/placeholder-thumb.jpg',
+  };
+
+  events.unshift(newEvent);
+  return newEvent;
+}
+
 export async function getEvent(id: string) {
   return (await getEvents()).find((event) => event.id.toString() === id);
+}
+
+export async function updateEvent(id: string, input: UpdateEventInput): Promise<Event | null> {
+  const events = await getEventsStore();
+  const index = events.findIndex((event) => event.id.toString() === id);
+
+  if (index === -1) {
+    return null;
+  }
+
+  const existingEvent = events[index];
+  const updatedEvent: Event = {
+    ...existingEvent,
+    name: input.name,
+    date: input.date,
+    time: input.time,
+    location: input.location,
+    ticketsAvailable: input.ticketsAvailable,
+    status: input.status,
+    imgUrl: input.imgUrl || existingEvent.imgUrl,
+    thumbUrl: input.thumbUrl || existingEvent.thumbUrl,
+  };
+
+  events[index] = updatedEvent;
+  return updatedEvent;
+}
+
+export async function deleteEvent(id: string): Promise<boolean> {
+  const events = await getEventsStore();
+  const index = events.findIndex((event) => event.id.toString() === id);
+  if (index === -1) return false;
+  events.splice(index, 1);
+  return true;
 }
 
 export async function getEventOrders(id: string) {
   return (await getOrders()).filter((order) => order.event?.id.toString() === id);
 }
 
-export async function getEvents() {
-  return [
-    {
-      id: 1000,
-      name: 'Bear Hug: Live in Concert',
-      url: '/events/1000',
-      date: 'May 20, 2024',
-      time: '10 PM',
-      location: 'Harmony Theater, Winnipeg, MB',
-      totalRevenue: '$102,552',
-      totalRevenueChange: '+3.2%',
-      ticketsAvailable: 500,
-      ticketsSold: 350,
-      ticketsSoldChange: '+8.1%',
-      pageViews: '24,300',
-      pageViewsChange: '-0.75%',
-      status: 'On Sale',
-      imgUrl: '/events/bear-hug.jpg',
-      thumbUrl: '/events/bear-hug-thumb.jpg',
-    },
-    {
-      id: 1001,
-      name: 'Six Fingers — DJ Set',
-      url: '/events/1001',
-      date: 'Jun 2, 2024',
-      time: '8 PM',
-      location: 'Moonbeam Arena, Uxbridge, ON',
-      totalRevenue: '$24,115',
-      totalRevenueChange: '+3.2%',
-      ticketsAvailable: 150,
-      ticketsSold: 72,
-      ticketsSoldChange: '+8.1%',
-      pageViews: '57,544',
-      pageViewsChange: '-2.5%',
-      status: 'On Sale',
-      imgUrl: '/events/six-fingers.jpg',
-      thumbUrl: '/events/six-fingers-thumb.jpg',
-    },
-    {
-      id: 1002,
-      name: 'We All Look The Same',
-      url: '/events/1002',
-      date: 'Aug 5, 2024',
-      time: '4 PM',
-      location: 'Electric Coliseum, New York, NY',
-      totalRevenue: '$40,598',
-      totalRevenueChange: '+3.2%',
-      ticketsAvailable: 275,
-      ticketsSold: 275,
-      ticketsSoldChange: '+8.1%',
-      pageViews: '122,122',
-      pageViewsChange: '-8.0%',
-      status: 'Closed',
-      imgUrl: '/events/we-all-look-the-same.jpg',
-      thumbUrl: '/events/we-all-look-the-same-thumb.jpg',
-    },
-    {
-      id: 1003,
-      name: 'Viking People',
-      url: '/events/1003',
-      date: 'Dec 31, 2024',
-      time: '8 PM',
-      location: 'Tapestry Hall, Cambridge, ON',
-      totalRevenue: '$3,552',
-      totalRevenueChange: '+3.2%',
-      ticketsAvailable: 40,
-      ticketsSold: 6,
-      ticketsSoldChange: '+8.1%',
-      pageViews: '9,000',
-      pageViewsChange: '-0.15%',
-      status: 'On Sale',
-      imgUrl: '/events/viking-people.jpg',
-      thumbUrl: '/events/viking-people-thumb.jpg',
-    },
-  ];
+export async function getEvents(): Promise<Event[]> {
+  return getEventsStore();
 }
 
 export function getCountries() {
