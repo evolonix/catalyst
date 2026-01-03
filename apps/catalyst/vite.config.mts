@@ -1,6 +1,8 @@
 /// <reference types='vitest' />
-import { defineConfig } from 'vite';
 import { reactRouter } from '@react-router/dev/vite';
+import tailwindcss from '@tailwindcss/vite';
+import { defineConfig } from 'vite';
+import devtoolsJson from 'vite-plugin-devtools-json';
 
 export default defineConfig(() => ({
   root: import.meta.dirname,
@@ -13,7 +15,7 @@ export default defineConfig(() => ({
     port: 4300,
     host: 'localhost',
   },
-  plugins: [!process.env.VITEST && reactRouter()],
+  plugins: [devtoolsJson(), !process.env.VITEST && reactRouter(), tailwindcss()],
   // Uncomment this if you are using workers.
   // worker: {
   //  plugins: [],
