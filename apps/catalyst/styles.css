@@ -4,3 +4,43 @@
   --font-sans: Inter, sans-serif;
   --font-sans--font-feature-settings: 'cv11';
 }
+
+@view-transition {
+  navigation: auto;
+}
+
+/* Events list page - no animation, stays visible underneath */
+/* ::view-transition-old(events-page),
+::view-transition-new(events-page) {
+  animation: none;
+} */
+
+/* Event detail page view transitions - slide over events list */
+/* ::view-transition-old(event-detail-page) {
+  animation: 300ms ease-in both slide-to-right;
+  z-index: 1;
+  @apply bg-zinc-100 lg:bg-white dark:bg-zinc-950 dark:lg:bg-zinc-900;
+}
+
+::view-transition-new(event-detail-page) {
+  animation: 300ms ease-out both slide-from-right;
+  z-index: 1;
+} */
+
+@keyframes slide-from-right {
+  from {
+    transform: translateX(100%);
+  }
+  to {
+    transform: translateX(0);
+  }
+}
+
+@keyframes slide-to-right {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(100%);
+  }
+}

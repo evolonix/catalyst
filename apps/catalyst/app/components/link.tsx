@@ -8,7 +8,7 @@ export const Link = forwardRef(function Link(
 ) {
   return (
     <Headless.DataInteractive>
-      <RouterLink {...props} to={props.href} ref={ref} />
+      <RouterLink {...props} to={props.href} ref={ref} viewTransition />
     </Headless.DataInteractive>
   );
 });
