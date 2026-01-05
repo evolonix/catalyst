@@ -10,6 +10,14 @@ import { Link } from '../../components/link';
 import { Select } from '../../components/select';
 import { getEvents } from '../../data';
 
+export function meta() {
+  return [
+    {
+      title: 'Events - Catalyst',
+    },
+  ];
+}
+
 export async function loader() {
   const events = await getEvents();
 

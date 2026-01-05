@@ -1,5 +1,5 @@
 import { ChevronLeftIcon } from '@heroicons/react/16/solid';
-import { LoaderFunctionArgs, useLoaderData } from 'react-router';
+import { LoaderFunctionArgs, MetaArgs, useLoaderData } from 'react-router';
 import { Badge } from '../../components/badge';
 import { Button } from '../../components/button';
 import { Heading, Subheading } from '../../components/heading';
@@ -7,6 +7,14 @@ import { Link } from '../../components/link';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '../../components/table';
 import { getEvent, getEventOrders } from '../../data';
 import { Stat } from '../../stat';
+
+export function meta({ loaderData }: MetaArgs<typeof loader>) {
+  return [
+    {
+      title: `${loaderData?.event.name} - Catalyst`,
+    },
+  ];
+}
 
 export async function loader({ params }: LoaderFunctionArgs) {
   const { eventId } = params;

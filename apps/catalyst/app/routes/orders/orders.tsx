@@ -5,6 +5,14 @@ import { Heading } from '../../components/heading';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '../../components/table';
 import { getOrders } from '../../data';
 
+export function meta() {
+  return [
+    {
+      title: 'Orders - Catalyst',
+    },
+  ];
+}
+
 export async function loader() {
   const orders = await getOrders();
 

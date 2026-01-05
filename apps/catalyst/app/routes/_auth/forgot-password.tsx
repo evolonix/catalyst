@@ -5,6 +5,14 @@ import { Input } from '../../components/input';
 import { Strong, Text, TextLink } from '../../components/text';
 import { Logo } from '../../logo';
 
+export function meta() {
+  return [
+    {
+      title: 'Forgot password - Catalyst',
+    },
+  ];
+}
+
 export default function ForgotPassword() {
   return (
     <form action="" method="POST" className="grid w-full max-w-sm grid-cols-1 gap-8">

@@ -11,6 +11,14 @@ import { Textarea } from '../../components/textarea';
 import { getCountries } from '../../data';
 import Address from './address';
 
+export function meta() {
+  return [
+    {
+      title: 'Settings - Catalyst',
+    },
+  ];
+}
+
 export async function loader() {
   const countries = await getCountries();
 

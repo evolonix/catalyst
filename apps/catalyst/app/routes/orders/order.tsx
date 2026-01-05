@@ -1,5 +1,5 @@
 import { BanknotesIcon, CalendarIcon, ChevronLeftIcon, CreditCardIcon } from '@heroicons/react/16/solid';
-import { LoaderFunctionArgs, useLoaderData } from 'react-router';
+import { LoaderFunctionArgs, MetaArgs, useLoaderData } from 'react-router';
 import { Avatar } from '../../components/avatar';
 import { Badge } from '../../components/badge';
 import { Button } from '../../components/button';
@@ -9,6 +9,14 @@ import { Heading, Subheading } from '../../components/heading';
 import { Link } from '../../components/link';
 import { getOrder } from '../../data';
 import { RefundOrder } from './refund';
+
+export function meta({ loaderData }: MetaArgs<typeof loader>) {
+  return [
+    {
+      title: `Order #${loaderData?.order.id} - Catalyst`,
+    },
+  ];
+}
 
 export async function loader({ params }: LoaderFunctionArgs) {
   const { orderId } = params;

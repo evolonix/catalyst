@@ -7,6 +7,14 @@ import { Select } from '../../components/select';
 import { Strong, Text, TextLink } from '../../components/text';
 import { Logo } from '../../logo';
 
+export function meta() {
+  return [
+    {
+      title: 'Register - Catalyst',
+    },
+  ];
+}
+
 export default function Register() {
   return (
     <form action="" method="POST" className="grid w-full max-w-sm grid-cols-1 gap-8">
