@@ -1,4 +1,4 @@
-import { useLoaderData } from 'react-router';
+import { Outlet, useLoaderData } from 'react-router';
 import { Avatar } from '../../components/avatar';
 import { Button } from '../../components/button';
 import { Heading } from '../../components/heading';
@@ -26,7 +26,7 @@ export default function Orders() {
     <>
       <div className="flex items-end justify-between gap-4">
         <Heading>Orders</Heading>
-        <Button className="-my-0.5">Create order</Button>
+        <Button href="/orders/new" className="-my-0.5">Create order</Button>
       </div>
       <Table className="mt-8 [--gutter:--spacing(6)] lg:[--gutter:--spacing(10)]">
         <TableHead>
@@ -55,6 +55,7 @@ export default function Orders() {
           ))}
         </TableBody>
       </Table>
+      <Outlet />
     </>
   );
 }

@@ -10,7 +10,9 @@ export default [
       route('edit', './routes/events/edit-event.tsx'),
       route('delete', './routes/events/delete-event.tsx'),
     ]),
-    route('orders', './routes/orders/orders.tsx'),
+    route('orders', './routes/orders/orders.tsx', [
+      route('new', './routes/orders/new-order.tsx'),
+    ]),
     route('orders/:orderId', './routes/orders/order.tsx'),
     route('settings', './routes/settings/settings.tsx'),
   ]),
